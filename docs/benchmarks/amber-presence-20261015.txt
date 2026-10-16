@@ -1,0 +1,24 @@
+goos: linux
+goarch: amd64
+pkg: github.com/yaop-labs/amber/internal/index
+cpu: AMD Ryzen 5 2600 Six-Core Processor            
+BenchmarkPresenceExperiment/broad/AFT3-12         	     296	   1229883 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/broad/AFT3-12         	     303	   1180364 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/broad/AFT3-12         	     297	   1196682 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/broad/presence-12     	     188	   1902486 ns/op	   5220068 index-B	   27856 B/op	      18 allocs/op
+BenchmarkPresenceExperiment/broad/presence-12     	     193	   1868397 ns/op	   5220068 index-B	   27856 B/op	      18 allocs/op
+BenchmarkPresenceExperiment/broad/presence-12     	     189	   1892918 ns/op	   5220068 index-B	   27856 B/op	      18 allocs/op
+BenchmarkPresenceExperiment/rare/AFT3-12          	     504	    629790 ns/op	   2400296 index-B	  805608 B/op	      29 allocs/op
+BenchmarkPresenceExperiment/rare/AFT3-12          	     591	    586840 ns/op	   2400296 index-B	  805608 B/op	      29 allocs/op
+BenchmarkPresenceExperiment/rare/AFT3-12          	     565	    588008 ns/op	   2400296 index-B	  805617 B/op	      29 allocs/op
+BenchmarkPresenceExperiment/rare/presence-12      	    1984	    168778 ns/op	   5220068 index-B	   13216 B/op	      28 allocs/op
+BenchmarkPresenceExperiment/rare/presence-12      	    2250	    166607 ns/op	   5220068 index-B	   13216 B/op	      28 allocs/op
+BenchmarkPresenceExperiment/rare/presence-12      	    2146	    164175 ns/op	   5220068 index-B	   13216 B/op	      28 allocs/op
+BenchmarkPresenceExperiment/candidates/AFT3-12    	     212	   1535002 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/candidates/AFT3-12    	     242	   1431794 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/candidates/AFT3-12    	     238	   1472602 ns/op	   2400296 index-B	 2409160 B/op	      20 allocs/op
+BenchmarkPresenceExperiment/candidates/presence-12         	   20737	     16175 ns/op	   5220068 index-B	   11584 B/op	      18 allocs/op
+BenchmarkPresenceExperiment/candidates/presence-12         	   20256	     16640 ns/op	   5220068 index-B	   11584 B/op	      18 allocs/op
+BenchmarkPresenceExperiment/candidates/presence-12         	   21186	     15976 ns/op	   5220068 index-B	   11584 B/op	      18 allocs/op
+PASS
+ok  	github.com/yaop-labs/amber/internal/index	11.244s

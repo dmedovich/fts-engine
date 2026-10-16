@@ -1,0 +1,233 @@
+// Copy into Amber's internal/index directory as presence_experiment_test.go.
+// This is an opt-in integration experiment, not an Amber production backend.
+package index
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"path/filepath"
+	"slices"
+	"sort"
+	"testing"
+
+	"github.com/dariasmyr/fts-engine/pkg/fts"
+	"github.com/dariasmyr/fts-engine/pkg/index/flat"
+	"github.com/dariasmyr/fts-engine/pkg/index/presence"
+)
+
+type presenceExperiment struct {
+	aft                     *FTSIndex
+	reader                  *presence.FileReader
+	table                   *fts.OrdinalTable
+	ids                     []uint64
+	bodies                  []string
+	tokens                  []map[string]bool
+	aftBytes, presenceBytes int64
+}
+
+func newPresenceExperiment(t testing.TB, n int) *presenceExperiment {
+	t.Helper()
+	e := &presenceExperiment{ids: make([]uint64, n), bodies: make([]string, n), tokens: make([]map[string]bool, n)}
+	aft, builder := NewFTSIndex(), flat.New()
+	ctx := context.Background()
+	for i := range n {
+		e.ids[i] = 100000001 + uint64(i)*1000000007
+		status := "ok"
+		if i%1000 == 0 {
+			status = "timeout"
+		}
+		e.bodies[i] = fmt.Sprintf("request checkout %s uid%032x обработка запроса", status, i)
+		if err := aft.Index(ctx, e.ids[i], e.bodies[i]); err != nil {
+			t.Fatal(err)
+		}
+		e.tokens[i] = make(map[string]bool)
+		for _, token := range TokenizeFTS(e.bodies[i]) {
+			if token == "" {
+				continue
+			}
+			e.tokens[i][token] = true
+			if err := builder.Insert(token, fts.DocOrd(i)); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	var err error
+	e.table, err = fts.NewOrdinalTable(e.ids)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dir := t.TempDir()
+	aftPath, presencePath := filepath.Join(dir, "index.aft"), filepath.Join(dir, "index.fpr")
+	if err := aft.Save(aftPath); err != nil {
+		t.Fatal(err)
+	}
+	e.aft, err = LoadFTSIndex(aftPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	f, err := os.Create(presencePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := presence.WriteFromSource(ctx, f, builder); err != nil {
+		f.Close()
+		t.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatal(err)
+	}
+	e.reader, err = presence.OpenFile(presencePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := e.reader.Close(); err != nil {
+			t.Error(err)
+		}
+	})
+	info, err := os.Stat(aftPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e.aftBytes = info.Size()
+	info, err = os.Stat(presencePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e.presenceBytes = info.Size() + int64(n)*8
+	return e
+}
+
+func (e *presenceExperiment) search(query string, candidates []uint64, yield func(uint64) bool) error {
+	ctx := context.Background()
+	c, n, err := e.table.Candidates(ctx, candidates)
+	if err != nil {
+		return err
+	}
+	var mappingErr error
+	err = fts.IntersectTermsWithIterator(ctx, e.reader, TokenizeFTS(query), c, n, func(ord fts.DocOrd) bool {
+		id, ok := e.table.ID(ord)
+		if !ok {
+			mappingErr = fmt.Errorf("invalid ordinal %d", ord)
+			return false
+		}
+		return yield(id)
+	})
+	if err != nil {
+		return err
+	}
+	return mappingErr
+}
+
+func TestPresenceExperiment(t *testing.T) {
+	e := newPresenceExperiment(t, 2000)
+	filters := [][]uint64{nil, {}, {0, e.ids[0], e.ids[1000], e.ids[1999], e.ids[1999] + 1}, {e.ids[0] + 1}}
+	for _, query := range []string{"request", "request timeout", "request request", "несуществующийтокен", "обработка запроса", e.bodies[123], ""} {
+		for _, filter := range filters {
+			var want, got, baseline []uint64
+			keys := TokenizeFTS(query)
+			for i, id := range e.ids {
+				match := len(keys) > 0
+				for _, key := range keys {
+					if !e.tokens[i][key] {
+						match = false
+					}
+				}
+				if match && (filter == nil || slices.Contains(filter, id)) {
+					want = append(want, id)
+				}
+			}
+			old, err := e.aft.Search(context.Background(), query, 0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, id := range old {
+				if filter == nil || slices.Contains(filter, id) {
+					baseline = append(baseline, id)
+				}
+			}
+			err = e.search(query, filter, func(id uint64) bool {
+				got = append(got, id)
+				return true
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !slices.Equal(got, want) || !slices.Equal(baseline, want) {
+				t.Fatalf("query %q filter=%v presence=%d AFT3=%d scan=%d", query, filter, len(got), len(baseline), len(want))
+			}
+			// Simulate predicates after FTS and timestamp pagination. Time order is
+			// deliberately unrelated to ordinal/ID order, so early FTS limits are wrong.
+			page := func(ids []uint64, offset int) []uint64 {
+				var accepted []uint64
+				for _, id := range ids {
+					ord, _ := e.table.Ordinal(id)
+					if uint64(ord)%7 != 0 {
+						accepted = append(accepted, id)
+					}
+				}
+				sort.Slice(accepted, func(i, j int) bool {
+					a, _ := e.table.Ordinal(accepted[i])
+					b, _ := e.table.Ordinal(accepted[j])
+					return (uint64(a)*37)%2000 > (uint64(b)*37)%2000
+				})
+				start := min(offset, len(accepted))
+				return accepted[start:min(start+25, len(accepted))]
+			}
+			for _, offset := range []int{0, 25, 50, 1000} {
+				if !slices.Equal(page(got, offset), page(want, offset)) {
+					t.Fatalf("pagination mismatch: %q offset %d", query, offset)
+				}
+			}
+		}
+	}
+}
+
+func BenchmarkPresenceExperiment(b *testing.B) {
+	e := newPresenceExperiment(b, 100000)
+	for _, tc := range []struct {
+		name, query string
+		candidates  []uint64
+		want        int
+	}{
+		{"broad", "request", nil, 100000},
+		{"rare", "request timeout", nil, 100},
+		{"candidates", "request", []uint64{0, e.ids[0], e.ids[10000], e.ids[50000], e.ids[99999], e.ids[99999] + 1}, 4},
+	} {
+		for _, mode := range []string{"AFT3", "presence"} {
+			b.Run(tc.name+"/"+mode, func(b *testing.B) {
+				b.ReportAllocs()
+				for b.Loop() {
+					count := 0
+					if mode == "AFT3" {
+						ids, err := e.aft.Search(context.Background(), tc.query, 0)
+						if err != nil {
+							b.Fatal(err)
+						}
+						for _, id := range ids {
+							if tc.candidates == nil || slices.Contains(tc.candidates, id) {
+								count++
+							}
+						}
+					} else {
+						if err := e.search(tc.query, tc.candidates, func(uint64) bool {
+							count++
+							return true
+						}); err != nil {
+							b.Fatal(err)
+						}
+					}
+					if count != tc.want {
+						b.Fatalf("count=%d want=%d", count, tc.want)
+					}
+				}
+				size := e.aftBytes
+				if mode == "presence" {
+					size = e.presenceBytes
+				}
+				b.ReportMetric(float64(size), "index-B")
+			})
+		}
+	}
+}

@@ -1,0 +1,78 @@
+goos: linux
+goarch: amd64
+pkg: github.com/dariasmyr/fts-engine/pkg/index/presence
+cpu: AMD Ryzen 5 2600 Six-Core Processor            
+BenchmarkIntersection/all/materialized-12         	     168	   2105886 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121731 B/op	       4 allocs/op
+BenchmarkIntersection/all/materialized-12         	     170	   2123546 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121764 B/op	       4 allocs/op
+BenchmarkIntersection/all/materialized-12         	     166	   2232299 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121731 B/op	       4 allocs/op
+BenchmarkIntersection/all/segment_iterator-12     	     114	   3107017 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/all/segment_iterator-12     	     100	   3334000 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/all/segment_iterator-12     	     100	   3108820 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/all/presence-12             	     160	   2243724 ns/op	    166507 index-B	    166324 read-B/op	        15.00 reads/op	   50000 B/op	       7 allocs/op
+BenchmarkIntersection/all/presence-12             	     148	   2391449 ns/op	    166507 index-B	    166324 read-B/op	        15.00 reads/op	   50000 B/op	       7 allocs/op
+BenchmarkIntersection/all/presence-12             	     156	   2292248 ns/op	    166507 index-B	    166324 read-B/op	        15.00 reads/op	   50000 B/op	       7 allocs/op
+BenchmarkIntersection/single/materialized-12      	     230	   1555084 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409029 B/op	       2 allocs/op
+BenchmarkIntersection/single/materialized-12      	     229	   1582968 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409030 B/op	       2 allocs/op
+BenchmarkIntersection/single/materialized-12      	     234	   1547842 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409027 B/op	       2 allocs/op
+BenchmarkIntersection/single/segment_iterator-12  	     164	   2181487 ns/op	    300388 index-B	    200003 read-B/op	        49.00 reads/op	    4352 B/op	       5 allocs/op
+BenchmarkIntersection/single/segment_iterator-12  	     160	   2222715 ns/op	    300388 index-B	    200003 read-B/op	        49.00 reads/op	    4352 B/op	       5 allocs/op
+BenchmarkIntersection/single/segment_iterator-12  	     160	   2218631 ns/op	    300388 index-B	    200003 read-B/op	        49.00 reads/op	    4352 B/op	       5 allocs/op
+BenchmarkIntersection/single/presence-12          	     214	   1671668 ns/op	    166507 index-B	    110840 read-B/op	         9.000 reads/op	   27312 B/op	       4 allocs/op
+BenchmarkIntersection/single/presence-12          	     219	   1645345 ns/op	    166507 index-B	    110840 read-B/op	         9.000 reads/op	   27312 B/op	       4 allocs/op
+BenchmarkIntersection/single/presence-12          	     219	   1635792 ns/op	    166507 index-B	    110840 read-B/op	         9.000 reads/op	   27312 B/op	       4 allocs/op
+BenchmarkIntersection/missing/materialized-12     	     334	   1073773 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409031 B/op	       2 allocs/op
+BenchmarkIntersection/missing/materialized-12     	     328	   1080322 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409027 B/op	       2 allocs/op
+BenchmarkIntersection/missing/materialized-12     	     345	   1046200 ns/op	    300388 index-B	    200003 read-B/op	         1.000 reads/op	 1409028 B/op	       2 allocs/op
+BenchmarkIntersection/missing/segment_iterator-12 	  196441	      1791 ns/op	    300388 index-B	      4096 read-B/op	         1.000 reads/op	    4448 B/op	       6 allocs/op
+BenchmarkIntersection/missing/segment_iterator-12 	  198687	      1877 ns/op	    300388 index-B	      4096 read-B/op	         1.000 reads/op	    4448 B/op	       6 allocs/op
+BenchmarkIntersection/missing/segment_iterator-12 	  177290	      1840 ns/op	    300388 index-B	      4096 read-B/op	         1.000 reads/op	    4448 B/op	       6 allocs/op
+BenchmarkIntersection/missing/presence-12         	  364266	       988.6 ns/op	    166507 index-B	         0 read-B/op	         0 reads/op	    2896 B/op	       3 allocs/op
+BenchmarkIntersection/missing/presence-12         	  348516	       994.9 ns/op	    166507 index-B	         0 read-B/op	         0 reads/op	    2896 B/op	       3 allocs/op
+BenchmarkIntersection/missing/presence-12         	  343790	       958.7 ns/op	    166507 index-B	         0 read-B/op	         0 reads/op	    2896 B/op	       3 allocs/op
+BenchmarkIntersection/rare/materialized-12        	     284	   1341121 ns/op	    300388 index-B	    200303 read-B/op	         2.000 reads/op	 1410627 B/op	       4 allocs/op
+BenchmarkIntersection/rare/materialized-12        	     264	   1327268 ns/op	    300388 index-B	    200303 read-B/op	         2.000 reads/op	 1410631 B/op	       4 allocs/op
+BenchmarkIntersection/rare/materialized-12        	     266	   1353070 ns/op	    300388 index-B	    200303 read-B/op	         2.000 reads/op	 1410633 B/op	       4 allocs/op
+BenchmarkIntersection/rare/segment_iterator-12    	     217	   1665323 ns/op	    300388 index-B	    200303 read-B/op	        50.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/rare/segment_iterator-12    	     206	   1671472 ns/op	    300388 index-B	    200303 read-B/op	        50.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/rare/segment_iterator-12    	     212	   1724366 ns/op	    300388 index-B	    200303 read-B/op	        50.00 reads/op	    8688 B/op	       9 allocs/op
+BenchmarkIntersection/rare/presence-12            	    4653	     85624 ns/op	    166507 index-B	     22577 read-B/op	       103.0 reads/op	   12384 B/op	       5 allocs/op
+BenchmarkIntersection/rare/presence-12            	    4706	     83260 ns/op	    166507 index-B	     22577 read-B/op	       103.0 reads/op	   12384 B/op	       5 allocs/op
+BenchmarkIntersection/rare/presence-12            	    3877	     84836 ns/op	    166507 index-B	     22577 read-B/op	       103.0 reads/op	   12384 B/op	       5 allocs/op
+BenchmarkIntersection/candidates/materialized-12  	     158	   2238963 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121730 B/op	       4 allocs/op
+BenchmarkIntersection/candidates/materialized-12  	     158	   2265547 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121730 B/op	       4 allocs/op
+BenchmarkIntersection/candidates/materialized-12  	     157	   2430701 ns/op	    300388 index-B	    300006 read-B/op	         2.000 reads/op	 2121731 B/op	       4 allocs/op
+BenchmarkIntersection/candidates/segment_iterator-12         	     133	   2675479 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8720 B/op	      10 allocs/op
+BenchmarkIntersection/candidates/segment_iterator-12         	     147	   2459254 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8720 B/op	      10 allocs/op
+BenchmarkIntersection/candidates/segment_iterator-12         	     145	   2489920 ns/op	    300388 index-B	    300006 read-B/op	        74.00 reads/op	    8720 B/op	      10 allocs/op
+BenchmarkIntersection/candidates/presence-12                 	   24789	     14688 ns/op	    166507 index-B	     14966 read-B/op	        10.00 reads/op	   17264 B/op	       6 allocs/op
+BenchmarkIntersection/candidates/presence-12                 	   24794	     14855 ns/op	    166507 index-B	     14966 read-B/op	        10.00 reads/op	   17264 B/op	       6 allocs/op
+BenchmarkIntersection/candidates/presence-12                 	   23017	     15086 ns/op	    166507 index-B	     14966 read-B/op	        10.00 reads/op	   17264 B/op	       6 allocs/op
+BenchmarkBuild/frequent/segment-12                           	     302	   1156359 ns/op	    300388 index-B	 1221657 B/op	      12 allocs/op
+BenchmarkBuild/frequent/segment-12                           	     294	   1204327 ns/op	    300388 index-B	 1221659 B/op	      12 allocs/op
+BenchmarkBuild/frequent/segment-12                           	     291	   1224432 ns/op	    300388 index-B	 1221659 B/op	      12 allocs/op
+BenchmarkBuild/frequent/presence-12                          	     421	    822947 ns/op	    166507 index-B	  535096 B/op	      22 allocs/op
+BenchmarkBuild/frequent/presence-12                          	     424	    825725 ns/op	    166507 index-B	  535096 B/op	      22 allocs/op
+BenchmarkBuild/frequent/presence-12                          	     435	    818352 ns/op	    166507 index-B	  535096 B/op	      22 allocs/op
+BenchmarkBuild/frequent/presence_stream-12                   	     508	    749362 ns/op	    166507 index-B	   43528 B/op	      17 allocs/op
+BenchmarkBuild/frequent/presence_stream-12                   	     482	    760659 ns/op	    166507 index-B	   43528 B/op	      17 allocs/op
+BenchmarkBuild/frequent/presence_stream-12                   	     445	    752705 ns/op	    166507 index-B	   43528 B/op	      17 allocs/op
+BenchmarkBuild/singletons/segment-12                         	      19	  17798590 ns/op	   5079360 index-B	34922790 B/op	      38 allocs/op
+BenchmarkBuild/singletons/segment-12                         	      18	  18848802 ns/op	   5079360 index-B	34922505 B/op	      38 allocs/op
+BenchmarkBuild/singletons/segment-12                         	      21	  18474917 ns/op	   5079360 index-B	34922504 B/op	      38 allocs/op
+BenchmarkBuild/singletons/presence-12                        	      16	  20844918 ns/op	   4283519 index-B	44597567 B/op	      52 allocs/op
+BenchmarkBuild/singletons/presence-12                        	      15	  21476687 ns/op	   4283519 index-B	44597560 B/op	      52 allocs/op
+BenchmarkBuild/singletons/presence-12                        	      16	  20375593 ns/op	   4283519 index-B	44597560 B/op	      52 allocs/op
+BenchmarkBuild/singletons/presence_stream-12                 	      27	  12662468 ns/op	   4283519 index-B	27853072 B/op	      42 allocs/op
+BenchmarkBuild/singletons/presence_stream-12                 	      27	  12909083 ns/op	   4283519 index-B	27853064 B/op	      42 allocs/op
+BenchmarkBuild/singletons/presence_stream-12                 	      27	  12525125 ns/op	   4283519 index-B	27853068 B/op	      42 allocs/op
+BenchmarkExternalIDs/sparse-12                               	   20791	     17288 ns/op	   17344 B/op	       6 allocs/op
+BenchmarkExternalIDs/sparse-12                               	   19828	     17306 ns/op	   17344 B/op	       6 allocs/op
+BenchmarkExternalIDs/sparse-12                               	   20521	     16820 ns/op	   17344 B/op	       6 allocs/op
+BenchmarkExternalIDs/dense-12                                	      87	   4029113 ns/op	   50112 B/op	       8 allocs/op
+BenchmarkExternalIDs/dense-12                                	      93	   3846683 ns/op	   50112 B/op	       8 allocs/op
+BenchmarkExternalIDs/dense-12                                	      93	   3773210 ns/op	   50112 B/op	       8 allocs/op
+BenchmarkExternalIDs/dense_rare-12                           	    1576	    216105 ns/op	   12496 B/op	       6 allocs/op
+BenchmarkExternalIDs/dense_rare-12                           	    1404	    223420 ns/op	   12496 B/op	       6 allocs/op
+BenchmarkExternalIDs/dense_rare-12                           	    1512	    230537 ns/op	   12496 B/op	       6 allocs/op
+PASS
+ok  	github.com/dariasmyr/fts-engine/pkg/index/presence	25.760s

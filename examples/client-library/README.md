@@ -39,6 +39,7 @@ Standalone examples:
 - `custom-options/main.go` - in-memory setup with a custom pipeline and filter
 - `field-clauses/main.go` - field-specific query clauses
 - `flat-observability/main.go` - flat index with observability-oriented tokenization
+- `filtered-presence/main.go` - streamed presence file, external uint64 IDs and candidate filtering
 - `segment-analyzer-compatibility/main.go` - self-contained segment save and analyzer-compatible restore
 - `segment-bundle/main.go` - save and restore one sealed segment as an `io.Writer`/`io.Reader` blob
 - `rank-profile/main.go` - multi-field ranking with weighted field scoring
@@ -67,6 +68,7 @@ go run ./examples/client-library/preset
 go run ./examples/client-library/custom-options
 go run ./examples/client-library/field-clauses
 go run ./examples/client-library/flat-observability
+go run ./examples/client-library/filtered-presence
 go run ./examples/client-library/segment-analyzer-compatibility
 go run ./examples/client-library/segment-bundle
 go run ./examples/client-library/rank-profile
